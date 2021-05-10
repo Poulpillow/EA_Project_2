@@ -1,13 +1,15 @@
 var dance;
 var z = [];
+var truncation = 0;
+var count = 0;
 var gui = new dat.GUI();
 var params = {
     Download_Image: function () { return save(); },
 };
 gui.add(params, "Download_Image");
 var modele = new rw.HostedModel({
-    url: "https://fashion-illustrations-d515a0ce.hosted-models.runwayml.cloud/v1/",
-    token: "clAH7CRoH1FdrNmmZUY1DA==",
+    url: "https://fashion-illustrations-c90f7f2f.hosted-models.runwayml.cloud/v1/",
+    token: "djqRhBB66SmA+ih0Cu7VFw==",
 });
 function draw() {
     background(0);
@@ -18,7 +20,7 @@ function draw() {
 function generateDance() {
     var data = {
         z: z,
-        truncation: 0.8
+        truncation: truncation
     };
     modele.info().then(function (info) { return console.log(info); });
     modele.query(data).then(gotImage);
@@ -28,16 +30,22 @@ function gotError(error) {
 }
 function gotImage(result) {
     dance = createImg(result.image);
+    p5.prototype.downloadFile(result.image, count.toString(), "png");
     dance.hide();
-    z[0] += 0.1;
-    generateDance();
+    var theta = map(count, 0, 99, 0, TWO_PI);
+    z[5] = 16 * pow(sin(theta), 3.0);
+    z[3] = 13 * cos(theta) - 5 * cos(2 * theta) - 2 * cos(3 * theta) - cos(4 * theta);
+    count++;
+    if (count < 100) {
+        generateDance();
+    }
 }
 function setup() {
     p6_CreateCanvas();
     for (var i = 0; i < 512; i++) {
         z[i] = random(-0.1, 0.1);
     }
-    createButton('dance').mousePressed(generateDance);
+    createButton('dance').mousePressed(function () { count = 0; generateDance(); });
 }
 function windowResized() {
     p6_ResizeCanvas();
