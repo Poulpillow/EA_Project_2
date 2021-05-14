@@ -32,11 +32,11 @@ function gotImage(result) {
     dance = createImg(result.image);
     p5.prototype.downloadFile(result.image, count.toString(), "png");
     dance.hide();
-    var theta = map(count, 0, 99, 0, TWO_PI);
-    z[5] = 16 * pow(sin(theta), 3.0);
-    z[3] = 13 * cos(theta) - 5 * cos(2 * theta) - 2 * cos(3 * theta) - cos(4 * theta);
+    var theta = map(count, 0, 9, 0, TWO_PI);
+    z[490] = cos(theta);
+    z[491] = sin(theta);
     count++;
-    if (count < 100) {
+    if (count < 10) {
         generateDance();
     }
 }
