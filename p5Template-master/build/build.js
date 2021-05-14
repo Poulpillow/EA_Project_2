@@ -1,19 +1,16 @@
 var z = [];
 var dance;
-var truncation;
+var truncation = 1;
 var count = 0;
-var t;
+var z_indices = [[5, 8], [81, 68], [3, 9], [200, 468], [479, 444], [63, 240], [311, 75], [367, 456], [400, 266], [159, 413], [195, 481], [340, 179], [25, 26]];
 var gui = new dat.GUI();
 var params = {
-    MaxFrame: 10,
+    MaxFrame: 975,
     Download_Image: function () { return save(); },
 };
-gui.add(params, "MaxFrame", 10, 100, 10);
+gui.add(params, "MaxFrame", 10, 1000, 1);
 gui.add(params, "Download_Image");
-var modele = new rw.HostedModel({
-    url: "https://fashion-illustrations-c90f7f2f.hosted-models.runwayml.cloud/v1/",
-    token: "djqRhBB66SmA+ih0Cu7VFw==",
-});
+var modele = new rw.HostedModel({});
 function draw() {
     background(0);
     if (dance) {
@@ -35,18 +32,13 @@ function gotImage(result) {
     dance = createImg(result.image);
     p5.prototype.downloadFile(result.image, count.toString(), "png");
     dance.hide();
-    var theta = map(count, 0, params.MaxFrame - 1, 0, TWO_PI);
-    z[5] = cos(theta);
-    z[13] = sin(theta);
-    t = map(count, 0, params.MaxFrame, 0, 30);
-    if (t < 15) {
-        truncation = map(t, 0, 15, 0.2, 0.7);
-    }
-    else if (t < 20) {
-        truncation = map(t, 15, 20, 0.7, 0.3);
-    }
-    else {
-        truncation = map(t, 20, 30, 0.3, 0.5);
+    var theta = map(count, 0, params.MaxFrame - 1, 0, TWO_PI * z_indices.length);
+    var index = floor(map(count, 0, params.MaxFrame - 1, 0, z_indices.length));
+    z[z_indices[index][0]] = cos(theta + TWO_PI / 8);
+    z[z_indices[index][1]] = sin(theta + TWO_PI / 8);
+    if (index > 0) {
+        z[z_indices[index - 1][0]] = 1 / sqrt(2);
+        z[z_indices[index - 1][1]] = 1 / sqrt(2);
     }
     count++;
     if (count < params.MaxFrame) {
@@ -57,6 +49,10 @@ function setup() {
     p6_CreateCanvas();
     for (var i = 0; i < 512; i++) {
         z[i] = 0;
+    }
+    for (var i = 0; i < z_indices.length; ++i) {
+        z[z_indices[i][0]] = 1 / sqrt(2);
+        z[z_indices[i][1]] = 1 / sqrt(2);
     }
     createButton('dance').mousePressed(function () { count = 0; generateDance(); });
 }

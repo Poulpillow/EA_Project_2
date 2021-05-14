@@ -1,6 +1,21 @@
 # p5 template project
 
-## Installing
+# Se connecter sur runwayml
+Trouver un nouveau compte (rip à tous les autres)
+
+# Indications
+Aidé par Jules de 23h à 1h30
+On a tout automatisé dans le code
+En gros il suffit dans le tableau tout en haut de mettre les paramètres à modifier
+On a fait 2 gif qui dure le temps de la musique, tu peux les prendre pour les modifier sur premiere pro : en gros découper les phases lentes et rapides et accélérer ou ralentir la phase
+(au pire appelle-moi)
+
+PS : on a pas des trucs de fou avec les parametres actuels, si tu peux juste tester qlques paramatre et faire une séquence entière voilà sinon j'ammene mon ordi et je pourrais en fond lancer de grands gif de 1000 images ;) 
+
+# Les images sont sur ce lien drive :
+https://drive.google.com/drive/folders/1qfNBVmJ2uncviFV0Pjp8mCJ-x04Bc2Yt?usp=sharing
+
+# Installing
 
 - Install Node ([https://nodejs.org/](https://nodejs.org/)). Choose the LTS version (or the Current, it doesn't matter).
 - Install a good IDE if you don't have one already. I do highly recommend VS Code ([https://code.visualstudio.com/](https://code.visualstudio.com/)).
@@ -21,7 +36,7 @@ sudo npm i -g npm-run-all typescript browser-sync
 
 Only use this command the first time you ever use this template (-g means you install things globally)
 
-### Launching
+# Launching
 
 Whenever you want to work on your project, simply launch it with
 
@@ -32,9 +47,9 @@ npm start
 A local version will now be running at [localhost:3000](http://localhost:3000)  
 You can now write all the p5 things you want in __*src/sketch.ts*__
 
-### Publishing online
+# Publishing online
 
-#### Using GitHub Pages
+# Using GitHub Pages
 
 Create a GitHub repository and commit all your files (if that's not already done)
 

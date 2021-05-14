@@ -4,16 +4,16 @@
 
 const z = [];
 let dance;
-let truncation;
+let truncation=1;
 let count=0;
-let t;
+const z_indices = [[5, 8], [81, 68], [3, 9], [200, 468],[479,444],[63,240],[311,75],[367,456],[400,266],[159,413],[195,481],[340,179],[25,26]]
 
 const gui = new dat.GUI()
 const params = {
-    MaxFrame: 10,
+    MaxFrame: 975,
     Download_Image: () => save(),
 }
-gui.add(params, "MaxFrame",10,100,10)
+gui.add(params, "MaxFrame",10,1000,1)
 gui.add(params, "Download_Image")
 
 //@ts-ignore
@@ -22,11 +22,23 @@ const modele = new rw.HostedModel({
     // url: "https://fashion-illustrations-d515a0ce.hosted-models.runwayml.cloud/v1/",
     // token: "clAH7CRoH1FdrNmmZUY1DA==",
 
-    // EMAIL clemence.voegele@gmail.com
-    url: "https://fashion-illustrations-c90f7f2f.hosted-models.runwayml.cloud/v1/",
-    token: "djqRhBB66SmA+ih0Cu7VFw==",
+    // EMAIL clemence.voegele@gmail.com : used
+    // url: "https://fashion-illustrations-c90f7f2f.hosted-models.runwayml.cloud/v1/",
+    // token: "djqRhBB66SmA+ih0Cu7VFw==",
+
+    // EMAIL Julia052000@hotmail.fr : used
+    // url: "https://fashion-illustrations-ce03057f.hosted-models.runwayml.cloud/v1/",
+    // token: "BfGfLZ+S0EZnPmo+SSbbzg==",
+
+    // EMAIL jujuclemimac@gmail.com : used
+    // url: "https://fashion-illustrations-87956c47.hosted-models.runwayml.cloud/v1/",
+    // token: "AFv/U9ziH45utMQmagpKuQ==",
+
+    // EMAIL julencefougele@gmail.com : used
+    // url: "https://fashion-illustrations-d94c60f1.hosted-models.runwayml.cloud/v1/",
+    // token: "8afun+/O0z5p/JuFPHn2vQ==",
   });
-  
+
 
 // -------------------
 //       Drawing
@@ -58,71 +70,6 @@ function gotError(error)
     console.error(error);
 }
 
-/*TEST1
-  function gotImage(result) {
-      dance = createImg(result.image);
-      dance.hide();
-      for (let i = 0; i < 512; i++)
-      {
-        z[i]+=0.1;
-        if (z[i]>0.5)
-        {
-          z[i]=-0.5;
-        }
-      }
-      if (count<10) {
-        setTimeout(generateDance,1000);
-        count ++;
-      }
-  }
-*/
-
-/*TEST2
-  function gotImage(result) {
-    dance = createImg(result.image);
-    p5.prototype.downloadFile(result.image, count.toString(), "png")
-    dance.hide();
-    truncation+=0.1;
-    if (count<10) {
-      setTimeout(generateDance,1000);
-      count ++;
-    }
-  }
-*/
-
-/*TEST3
-  function gotImage(result) {
-    dance = createImg(result.image);
-    p5.prototype.downloadFile(result.image, count.toString(), "png")
-    dance.hide();
-    const theta=map(count,0,params.MaxFrame-1,0,TWO_PI);
-
-    // EQUATION 1 (cercle spirale)
-    // z[i]=cos(theta)+0.1*cos(10*theta);
-    // z[j]=sin(theta)+0.1*sin(10*theta);
-
-
-    // EQUATION 2 (coeur)
-    // z[i]=16 * pow(sin(theta), 3.0);
-    // z[j]=13 * cos(theta) - 5 * cos(2*theta) - 2 * cos(3*theta) - cos(4*theta);
-    
-
-    // Z utilisé : 0,1,3,5,8,10,21,100,490,491,500,501,510,511
-
-    // EQUATION 3 (cercle)
-    z[5]=cos(theta);
-    z[13]=sin(theta);
-
-    truncation=map(count,0,params.MaxFrame-1,0.5,1);
-
-    count ++;
-    if (count<params.MaxFrame) {
-      //setTimeout(generateDance,1000);
-      generateDance();
-    }
-  }
-*/
-
 function gotImage(result) {
   dance = createImg(result.image);
   // Download every generated picture
@@ -130,23 +77,17 @@ function gotImage(result) {
   dance.hide();
 
   // Creation of the gif loop
-  const theta=map(count,0,params.MaxFrame-1,0,TWO_PI);
-  z[5]=cos(theta);
-  z[13]=sin(theta);
+  const theta = map(count, 0, params.MaxFrame - 1, 0, TWO_PI * z_indices.length);
 
   // Creation of the rythm
-  t=map(count,0,params.MaxFrame,0,30)
 
-  if (t<15) {
-    truncation=map(t,0,15,0.2,0.7);
-  }
+  const index = floor(map(count, 0, params.MaxFrame - 1, 0, z_indices.length))
 
-  else if (t<20) {
-    truncation=map(t,15,20,0.7,0.3);
-  }
-
-  else {
-    truncation=map(t,20,30,0.3,0.5);
+  z[z_indices[index][0]] = cos(theta + TWO_PI / 8);
+  z[z_indices[index][1]] = sin(theta + TWO_PI / 8);
+  if (index > 0) {
+    z[z_indices[index-1][0]] = 1/sqrt(2)
+    z[z_indices[index-1][1]] = 1/sqrt(2)
   }
 
   // Variable to stop the code
@@ -163,8 +104,13 @@ function gotImage(result) {
 function setup() {
     p6_CreateCanvas()
     for (let i = 0; i < 512; i++) {
-        z[i] = 0; //last version : =random(-0.1, 0.1);
+        z[i] = 0   
     }
+ 
+    for (let i = 0; i < z_indices.length; ++i) {
+      z[z_indices[i][0]] = 1/sqrt(2)
+      z[z_indices[i][1]] = 1/sqrt(2)
+    }   
     createButton('dance').mousePressed(() => {count = 0; generateDance()});
 }
 
