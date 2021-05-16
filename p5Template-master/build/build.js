@@ -1,16 +1,33 @@
-var z = [];
 var dance;
 var truncation = 1;
 var count = 0;
-var z_indices = [[5, 8], [81, 68], [3, 9], [200, 468], [479, 444], [63, 240], [311, 75], [367, 456], [400, 266], [159, 413], [195, 481], [340, 179], [25, 26]];
+var z = [];
+var z_index = [
+    [5, 8],
+    [81, 68],
+    [3, 9],
+    [200, 468],
+    [479, 444],
+    [63, 240],
+    [311, 75],
+    [367, 456],
+    [400, 266],
+    [159, 413],
+    [195, 481],
+    [340, 179],
+    [25, 26]
+];
 var gui = new dat.GUI();
 var params = {
-    MaxFrame: 975,
+    MaxFrame: 100,
     Download_Image: function () { return save(); },
 };
-gui.add(params, "MaxFrame", 10, 1000, 1);
+gui.add(params, "MaxFrame", 100, 1000, 10);
 gui.add(params, "Download_Image");
-var modele = new rw.HostedModel({});
+var modele = new rw.HostedModel({
+    url: "https://fashion-illustrations-d94c60f1.hosted-models.runwayml.cloud/v1/",
+    token: "8afun+/O0z5p/JuFPHn2vQ==",
+});
 function draw() {
     background(0);
     if (dance) {
@@ -32,13 +49,13 @@ function gotImage(result) {
     dance = createImg(result.image);
     p5.prototype.downloadFile(result.image, count.toString(), "png");
     dance.hide();
-    var theta = map(count, 0, params.MaxFrame - 1, 0, TWO_PI * z_indices.length);
-    var index = floor(map(count, 0, params.MaxFrame - 1, 0, z_indices.length));
-    z[z_indices[index][0]] = cos(theta + TWO_PI / 8);
-    z[z_indices[index][1]] = sin(theta + TWO_PI / 8);
+    var theta = map(count, 0, params.MaxFrame - 1, 0, TWO_PI * z_index.length);
+    var index = floor(map(count, 0, params.MaxFrame - 1, 0, z_index.length));
+    z[z_index[index][0]] = cos(theta + TWO_PI / 8);
+    z[z_index[index][1]] = sin(theta + TWO_PI / 8);
     if (index > 0) {
-        z[z_indices[index - 1][0]] = 1 / sqrt(2);
-        z[z_indices[index - 1][1]] = 1 / sqrt(2);
+        z[z_index[index - 1][0]] = 1 / sqrt(2);
+        z[z_index[index - 1][1]] = 1 / sqrt(2);
     }
     count++;
     if (count < params.MaxFrame) {
@@ -50,9 +67,9 @@ function setup() {
     for (var i = 0; i < 512; i++) {
         z[i] = 0;
     }
-    for (var i = 0; i < z_indices.length; ++i) {
-        z[z_indices[i][0]] = 1 / sqrt(2);
-        z[z_indices[i][1]] = 1 / sqrt(2);
+    for (var i = 0; i < z_index.length; ++i) {
+        z[z_index[i][0]] = 1 / sqrt(2);
+        z[z_index[i][1]] = 1 / sqrt(2);
     }
     createButton('dance').mousePressed(function () { count = 0; generateDance(); });
 }
